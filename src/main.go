@@ -7,7 +7,6 @@ import (
 	"os"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
-	"github.com/joho/godotenv"
 )
 
 var (
@@ -15,10 +14,6 @@ var (
 )
 
 func main() {
-	if err := godotenv.Load(); err != nil {
-		log.Fatal(err)
-	}
-
 	b, err := tgbotapi.NewBotAPI(os.Getenv("BOT_TOKEN"))
 	if err != nil {
 		log.Fatal("")
