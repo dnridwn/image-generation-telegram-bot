@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-const baseURL = "https://pollinations.ai/p"
+const baseURL = "https://image.pollinations.ai/prompt"
 
 func SendImageGenerationRequest(p string) (io.Reader, error) {
 	resp, err := http.Get(fmt.Sprintf("%s/%s", baseURL, p))

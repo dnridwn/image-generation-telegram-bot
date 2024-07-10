@@ -16,7 +16,7 @@ var (
 func main() {
 	b, err := tgbotapi.NewBotAPI(os.Getenv("BOT_TOKEN"))
 	if err != nil {
-		log.Fatal("")
+		log.Fatal(err)
 	}
 	bot = b
 
@@ -43,6 +43,10 @@ func handleMessage(ctx context.Context, u tgbotapi.Update) {
 		return
 	default:
 		log.Printf("receive message from %s\n", u.Message.From.UserName)
+
+		msg := tgbotapi.NewMessage(u.Message.Chat.ID, "Please wait. We're working on it...")
+		msg.ReplyToMessageID = u.Message.MessageID
+		bot.Send(msg)
 
 		file, err := SendImageGenerationRequest(u.Message.Text)
 		if err != nil {
