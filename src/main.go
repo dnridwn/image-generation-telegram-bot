@@ -31,10 +31,37 @@ func main() {
 
 	updates := b.GetUpdatesChan(u)
 	for update := range updates {
-		go handleMessage(ctx, update)
+		if update.Message != nil {
+			if update.Message.IsCommand() {
+				go handleCommand(ctx, update)
+			} else {
+				go handleMessage(ctx, update)
+			}
+		}
 	}
 
 	defer cancel()
+}
+
+func handleCommand(ctx context.Context, u tgbotapi.Update) {
+	select {
+	case <-ctx.Done():
+		return
+	default:
+		switch u.Message.Command() {
+		case "start":
+			githubBtn := tgbotapi.NewInlineKeyboardButtonURL("Github of Creator", "https://github.com/dnridwn")
+			message := "Hello! I am an Image Generation Bot.\nI was created by Den Ridwan Saputra\n\nPlease write your prompt."
+
+			msg := tgbotapi.NewMessage(u.Message.Chat.ID, message)
+			msg.ReplyToMessageID = u.Message.MessageID
+			msg.ReplyMarkup = tgbotapi.NewInlineKeyboardMarkup([]tgbotapi.InlineKeyboardButton{githubBtn})
+			_, err := bot.Send(msg)
+			if err != nil {
+				log.Println(err)
+			}
+		}
+	}
 }
 
 func handleMessage(ctx context.Context, u tgbotapi.Update) {
