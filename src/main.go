@@ -93,6 +93,7 @@ func handleMessage(ctx context.Context, u tgbotapi.Update) {
 		}
 
 		photo := tgbotapi.NewPhoto(u.Message.Chat.ID, uploadFile)
+		photo.ReplyToMessageID = u.Message.MessageID
 		bot.Send(photo)
 	}
 }
